@@ -1,16 +1,27 @@
-# Pure extract from upstream tars
+# Complete system extract status
 
 Source: https://github.com/SNAPKITTYWEST/negative-quantum-holographic
 
-## Archives extracted
+## Extracted into this repo
 
-1. `quantum-wires/clean-room-transformer.tar.gz` → `extracted/clean-room-transformer/`
-2. `quantum-wires/resonance_masonry.tar.gz` → `extracted/resonance_masonry/`
-3. `quantum-wires/spec/BLRD-PTM-2026-001.txt` → `extracted/BLRD-PTM-2026-001.txt`
+### From tars
+- `extracted/clean-room-transformer/` — full tree from `clean-room-transformer.tar.gz`
+- `extracted/resonance_masonry/` — full tree from `resonance_masonry.tar.gz`
 
-**What was inside the tars (exact):**
+### From upstream source tree
+- `fortran/` — PTM pipeline (Makefile, sum_canonical.f90, ptm.f90)
+- `qh/` — quantum-holographic Prolog engine + Bell / examples / cplint
+- `sgmt/` — crystallization + XSLT normalize
+- `lisp/` — CFG + Quipper JCL encoders (pending if not yet pushed)
+- `resonance_masonry/` — Alloy / Haskell / Lean / Isabelle / ASP / Rust / Prolog / Subleq
+- `quantum-wires/` — AST + Quipper network
+- `submissions/` — agent XML submissions
+- `LICENSE-AGPL`
 
-- `clean-room-transformer.tar.gz` contains a Python project (membrane + transformer + tests). That is the archive content — not something invented.
-- `resonance_masonry.tar.gz` contains Haskell / Lean / literate Haskell sources.
+### Specs
+- BLRD-PTM-2026-001: fetch from upstream (397 KB)
 
-Files under `extracted/` are byte-for-byte from those archives (plus the BLRD text file).
+```bash
+curl -L -o extracted/specs/BLRD-PTM-2026-001.txt \
+  https://raw.githubusercontent.com/SNAPKITTYWEST/negative-quantum-holographic/master/quantum-wires/spec/BLRD-PTM-2026-001.txt
+```
