@@ -1,23 +1,44 @@
-# Negative Quantum Holographic — System Demos
+# negative-quantum-holographic-extracted
 
-Extracted from [SNAPKITTYWEST/negative-quantum-holographic](https://github.com/SNAPKITTYWEST/negative-quantum-holographic).
+Working extract of [SNAPKITTYWEST/negative-quantum-holographic](https://github.com/SNAPKITTYWEST/negative-quantum-holographic).
 
+```bash
+git clone https://github.com/AHMADALIPARR/negative-quantum-holographic-extracted.git
+cd negative-quantum-holographic-extracted
 ```
-Measure → Encode → Verify CARE → Optimize → Commit
+
+To pull the full upstream tree and unpack every archive:
+
+```bash
+chmod +x scripts/bootstrap-complete.sh && ./scripts/bootstrap-complete.sh
 ```
 
 ---
 
-## Demo 1 · CARE invariant (Lean 4)
-
-Protected state must not change; authority may only grow by grant.
+## 1. Fortran PTM — canonical sum
 
 ```bash
-# requires Lean 4
+cd fortran
+gfortran -O2 -o sum_canonical sum_canonical.f90
+./sum_canonical
+```
+
+```
+SUM(1..100) = 5050  hex = 0x000013BA
+CANONICAL VERIFICATION: PASS  (5050 = 0x000013BA)
+```
+
+`make test` builds both `sum_canonical` and `ptm_pipeline` (after bootstrap for `ptm.f90`).
+
+---
+
+## 2. CARE — Lean 4
+
+```bash
 lean resonance_masonry/lean/Care.lean
 ```
 
-Core definition:
+Defines:
 
 ```lean
 def Care (s s' : State) : Prop :=
@@ -25,150 +46,115 @@ def Care (s s' : State) : Prop :=
   subset (Authority s') (Authority s ++ Granted s)
 ```
 
-Dark Masonry = transition ∧ privileged ∧ ¬CARE.
+Also proves `care_global_no_dark_masonry` and a protected-set change counterexample.
 
 ---
 
-## Demo 2 · CARE / Dark Masonry (Alloy)
-
-Bounded counterexample search against CARE:
+## 3. CARE — Alloy
 
 ```bash
+# needs Alloy 6 jar: export ALLOY_JAR=/path/to/org.alloytools.alloy.dist.jar
 cd resonance_masonry/alloy
 ./run-alloy.sh CareInvariant.als
+./run-alloy.sh Connect.als
 ./run-alloy.sh ResonantSubleq.als
-# full models (after bootstrap):
-#   DarkMasonry.als  resonance.als  Connect.als
 ```
 
-Expected shape:
-
-| Command | Meaning |
-|---------|---------|
-| `run careGlobal` | all transitions obey CARE |
-| `run counterexample` | search for Dark Masonry |
+| File | What it checks |
+|------|----------------|
+| `CareInvariant.als` | `Care` global vs Dark Masonry counterexample |
+| `Connect.als` | CARE-gated syscall vs dark syscall |
+| `ResonantSubleq.als` | SUBLEQ PC step, trap / god domain |
 
 ---
 
-## Demo 3 · Resonance Masonry (Haskell)
-
-Executable reference model + SUBLEQ resonance:
+## 4. Resonance Masonry — Haskell
 
 ```bash
 cd extracted/resonance_masonry
 runghc ResonanceMasonry.hs
-# or
-./build.sh
 ```
 
-Prints OpInvariant, LightMasonry, CARE, PC period, resonance @ 1 GHz.
+```
+RESONANCE MASONRY
+("OpInvariant(A)",True)
+("LightMasonry(Psi s)",True)
+("CARE",True)
+("DarkCrossing",False)
+("PC trace",[0,0,0,0,0,0,0,0,0,0,0,0])
+("PC period",Just 1)
+("resonance @ 1GHz",Just 1.0e9)
+```
 
 ---
 
-## Demo 4 · Quantum-holographic Bell state (Prolog)
+## 5. Quantum-holographic Bell state — Prolog
+
+Requires SWI-Prolog with `pita` / `cplint`.
 
 ```bash
-# requires SWI-Prolog + pita/cplint packs
 swipl -s qh/qh_bell.pl
+```
+
+```prolog
 ?- demo_bell.
+joint: P(up,up) = 0.64, P(down,down) = 0.36, P(up,down) = 0.0
+
 ?- demo_marginal.
+marginal: P(left up) = 0.64, P(same spin) = 1.0
+
 ?- demo_conditional.
+P(reported up | left up) = 0.95
 ```
 
-State: `|ψ⟩ ≈ 0.8|↑↑⟩ + 0.6|↓↓⟩`  
-Expected: `P(↑↑)=0.64`, `P(↓↓)=0.36`, `P(same spin)=1.0`.
+State encoded in the file: `|ψ⟩ = 0.8|↑↑⟩ + 0.6|↓↓⟩`.
 
 ---
 
-## Demo 5 · Fortran PTM canonical sum
+## 6. Clean-room transformer — membrane + tests
+
+Needs the full extract (`./scripts/bootstrap-complete.sh`).
 
 ```bash
-cd fortran
-make test
-# or
-gfortran -o sum_canonical sum_canonical.f90 && ./sum_canonical
-```
-
-Expected: `SUM(1..100) = 5050` (`0x000013BA`) — PASS.
-
----
-
-## Demo 6 · Clean-room transformer + integrity membrane
-
-```bash
-# after bootstrap (full extract)
 cd extracted/clean-room-transformer
 pip install --require-hashes --no-deps -r requirements.txt
 pip install -r requirements-dev.txt
-python3 -m pytest tests -q          # 154 tests
-python3 scripts/demo.py             # clean run + quarantine demo
-python3 scripts/verification_report.py
+python3 -m pytest tests -q
+python3 scripts/demo.py
 ```
 
-Every layer boundary is intercepted; violations quarantine + roll back KV state.
+`demo.py` runs a clean generation pass, then injects a corruption and shows quarantine + KV rollback.
 
 ---
 
-## Demo 7 · Quipper quantum wire network
+## 7. Quipper wire network
 
-1500-line Quipper circuit bank (full file via bootstrap):
+Full 1503-line circuit bank is not stored in-tree (size). Fetch it:
 
 ```bash
-# after bootstrap
-cd upstream/quantum-wires/quipper
-# requires Quipper
-# quantum_wire_network_1500_lines.hs
+mkdir -p quantum-wires/quipper
+curl -fsSL -o quantum-wires/quipper/quantum_wire_network_1500_lines.hs \
+  https://raw.githubusercontent.com/SNAPKITTYWEST/negative-quantum-holographic/master/quantum-wires/quipper/quantum_wire_network_1500_lines.hs
 ```
 
-Core pattern:
-
-```haskell
-qwire :: Bool -> Qubit -> Circ Qubit
-qwire b q = do
-  if b then gate_X q else return q
-
-wireBank :: [Bool] -> Circ [Qubit]
-wireBank bs = do
-  qs <- mapM qinit bs
-  mapM (uncurry qwire) (zip bs qs)
-```
+Entry points in that file: `qwire`, `wireBank`, `wire_0001` … `wire_N`.
 
 ---
 
-## Demo 8 · Full system bootstrap
-
-Pull **everything** still missing from upstream (Quipper 1500-line network, full CRT, BLRD, lisp encoders, Alloy DarkMasonry/resonance, Isabelle, ASP, Rust, submissions):
-
-```bash
-chmod +x scripts/bootstrap-complete.sh
-./scripts/bootstrap-complete.sh
-```
-
-Produces:
+## Tree
 
 ```
-upstream/     — full SNAPKITTYWEST tree
-extracted/    — all tar.gz contents + BLRD-PTM-2026-001.txt
+fortran/                     PTM sum + Makefile
+qh/                          Bell / cplint / examples
+resonance_masonry/
+  lean/Care.lean             CARE theorems
+  alloy/                     CareInvariant, Connect, ResonantSubleq
+extracted/
+  resonance_masonry/         HS executable model
+  clean-room-transformer/    membrane runtime (after bootstrap)
+scripts/bootstrap-complete.sh
 ```
 
----
+Source of truth for anything still missing: the upstream repo and the bootstrap script.
 
-## Module map
-
-| Path | Role |
-|------|------|
-| `resonance_masonry/lean/Care.lean` | CARE proof obligations |
-| `resonance_masonry/alloy/` | CARE / Dark Masonry / SUBLEQ bounded search |
-| `extracted/resonance_masonry/` | Executable HS + Lean + LH |
-| `qh/` | Quantum-holographic engine + Bell demos |
-| `fortran/` | PTM pipeline |
-| `extracted/clean-room-transformer/` | Membrane-governed transformer |
-| `upstream/quantum-wires/quipper/` | Quipper wire network (post-bootstrap) |
-| `upstream/lisp/` | CFG + Quipper JCL encoders (post-bootstrap) |
-| `extracted/specs/BLRD-*.txt` | Binary-level PTM spec (post-bootstrap) |
-
----
-
-## License
-
-AGPL-3.0 (upstream `LICENSE-AGPL`).
+License: AGPL-3.0 (upstream `LICENSE-AGPL`).
