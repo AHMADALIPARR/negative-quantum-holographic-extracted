@@ -1,53 +1,37 @@
-# Negative Quantum Holographic — Extracted & Organized
+# Negative Quantum Holographic — Pure Extract
 
-Extracted from [SNAPKITTYWEST/negative-quantum-holographic](https://github.com/SNAPKITTYWEST/negative-quantum-holographic).
+**Exact contents** of the upstream tarballs and the BLRD text file from:
 
-## Layout
+https://github.com/SNAPKITTYWEST/negative-quantum-holographic
 
-```
-quantum-wires/
-├── extracted/
-│   ├── ORGANIZATION.md
-│   ├── resonance_masonry/          ✅ complete (HS / Lean / LHS + AGPL headers)
-│   └── clean-room-transformer/     ⏳ partial (root configs + core src modules)
-└── specs/
-    └── BLRD-PTM-2026-001.txt       ⏳ pending (397 KB — use local extract)
-```
+## What was in the archives (fact)
 
-## What's in the repo now
+| Archive | Contents |
+|---------|----------|
+| `clean-room-transformer.tar.gz` | Python project (membrane + transformer + 154 tests) |
+| `resonance_masonry.tar.gz` | Haskell + Lean + Liquid Haskell sources |
+| `BLRD-PTM-2026-001.txt` | 5629-line PTM binary-level specification |
 
-| Path | Status |
-|------|--------|
-| `quantum-wires/extracted/resonance_masonry/` | Full (`.hs`, `.lean`, `.lhs`, `build.sh`) |
-| `quantum-wires/extracted/clean-room-transformer/requirements*.txt` | ✅ |
-| `quantum-wires/extracted/clean-room-transformer/conftest.py` | ✅ |
-| `quantum-wires/extracted/clean-room-transformer/src/runtime/` | ✅ partial |
-| `quantum-wires/extracted/clean-room-transformer/src/membrane/exceptions.py` | ✅ |
-| `quantum-wires/extracted/clean-room-transformer/src/transformer/config.py` | ✅ |
-| Remaining CRT `src/`, `tests/`, `scripts/` | Local extract ready to push |
-| `quantum-wires/specs/BLRD-PTM-2026-001.txt` | Local extract ready (397 KB) |
+The Python tree is **not invented** — it is what `tar -tzf clean-room-transformer.tar.gz` lists.
 
-## License headers
-
-All source files carry:
+## Layout in this repo
 
 ```
-SPDX-License-Identifier: AGPL-3.0-or-later
+extracted/
+├── clean-room-transformer/   # from clean-room-transformer.tar.gz
+├── resonance_masonry/        # from resonance_masonry.tar.gz
+└── specs/                    # BLRD pointer + fetch instructions
+EXTRACT.md
 ```
 
-consistent with upstream `LICENSE-AGPL`.
-
-## Source archives (upstream)
-
-- `quantum-wires/clean-room-transformer.tar.gz`
-- `quantum-wires/resonance_masonry.tar.gz`
-- `quantum-wires/spec/BLRD-PTM-2026-001.txt`
-
-## Quick start (when full CRT tree is present)
+## Fetch full BLRD (397 KB)
 
 ```bash
-cd quantum-wires/extracted/clean-room-transformer
-pip install -r requirements.txt
-python3 -m pytest tests -q
-python3 scripts/demo.py
+mkdir -p extracted/specs
+curl -L -o extracted/specs/BLRD-PTM-2026-001.txt \
+  https://raw.githubusercontent.com/SNAPKITTYWEST/negative-quantum-holographic/master/quantum-wires/spec/BLRD-PTM-2026-001.txt
 ```
+
+## Upstream
+
+https://github.com/SNAPKITTYWEST/negative-quantum-holographic
