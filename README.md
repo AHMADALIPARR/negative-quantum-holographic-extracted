@@ -1,37 +1,51 @@
-# Negative Quantum Holographic — Pure Extract
+# Negative Quantum Holographic — Complete Extract
 
-**Exact contents** of the upstream tarballs and the BLRD text file from:
+Mirror + pure extracts from [SNAPKITTYWEST/negative-quantum-holographic](https://github.com/SNAPKITTYWEST/negative-quantum-holographic).
 
-https://github.com/SNAPKITTYWEST/negative-quantum-holographic
+## One-command complete system
 
-## What was in the archives (fact)
+```bash
+git clone https://github.com/AHMADALIPARR/negative-quantum-holographic-extracted.git
+cd negative-quantum-holographic-extracted
+chmod +x scripts/bootstrap-complete.sh
+./scripts/bootstrap-complete.sh
+```
+
+This clones upstream, extracts **all** `.tar.gz` archives into `extracted/`, and copies the full BLRD spec.
+
+## What the archives contain (verified)
 
 | Archive | Contents |
 |---------|----------|
-| `clean-room-transformer.tar.gz` | Python project (membrane + transformer + 154 tests) |
-| `resonance_masonry.tar.gz` | Haskell + Lean + Liquid Haskell sources |
+| `clean-room-transformer.tar.gz` | Python membrane + transformer + 154 tests |
+| `resonance_masonry.tar.gz` | Haskell / Lean / Liquid Haskell sources |
 | `BLRD-PTM-2026-001.txt` | 5629-line PTM binary-level specification |
 
-The Python tree is **not invented** — it is what `tar -tzf clean-room-transformer.tar.gz` lists.
-
-## Layout in this repo
+## Layout (after bootstrap)
 
 ```
+upstream/                          # full mirror of upstream repo
 extracted/
-├── clean-room-transformer/   # from clean-room-transformer.tar.gz
-├── resonance_masonry/        # from resonance_masonry.tar.gz
-└── specs/                    # BLRD pointer + fetch instructions
-EXTRACT.md
+  clean-room-transformer/          # from tar
+  resonance_masonry/               # from tar
+  specs/BLRD-PTM-2026-001.txt      # from upstream
+fortran/  qh/  lisp/  sgmt/        # key modules (also in upstream/)
+resonance_masonry/alloy/           # Alloy CARE / SUBLEQ models
+scripts/bootstrap-complete.sh
 ```
 
-## Fetch full BLRD (397 KB)
+## Partial tree already in this repo
 
-```bash
-mkdir -p extracted/specs
-curl -L -o extracted/specs/BLRD-PTM-2026-001.txt \
-  https://raw.githubusercontent.com/SNAPKITTYWEST/negative-quantum-holographic/master/quantum-wires/spec/BLRD-PTM-2026-001.txt
-```
+Pushed so far without bootstrap:
 
-## Upstream
+- `extracted/resonance_masonry/` (pure tar extract)
+- `extracted/clean-room-transformer/` (partial pure extract)
+- `fortran/` (Makefile + sum_canonical)
+- `qh/` (bell + examples)
+- `resonance_masonry/alloy/` (CARE + SUBLEQ Alloy models)
 
-https://github.com/SNAPKITTYWEST/negative-quantum-holographic
+Run the bootstrap script to fill everything else (lisp, full CRT, ptm.f90, BLRD, submissions, quipper network, etc.).
+
+## License
+
+Upstream uses AGPL-3.0 (see upstream `LICENSE-AGPL`).
